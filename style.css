@@ -23,7 +23,11 @@ body {
   border-radius: 1vw;
 }
 
-#add-task {
+#save-state-button {
+  margin-left: auto;
+}
+
+.header-buttons {
   background-color: #DEB887;
   color: white;
   border-radius: 3vw;
