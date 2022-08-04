@@ -1,0 +1,78 @@
+body {
+  background-color: #a8adb2;
+  flex-direction: column;
+  display: flex;
+}
+
+#header {
+  background-color: #F0F8FF;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  border-radius: 1vw;
+}
+
+#logo {
+  background-color: #48adc1;
+  color: white;
+  text-align: center;
+  font-size: 2vw;
+  font-family: "Serif";
+  margin: 1vw;
+  padding: 0.5vw;
+  border-radius: 1vw;
+}
+
+#add-task {
+  background-color: #DEB887;
+  color: white;
+  border-radius: 3vw;
+  font-size: 2vw;
+  font-family: "Serif";
+  margin: 1vw;
+  border: 0vw;
+  padding-left: 1vw;
+  padding-right: 1vw;
+}
+
+.task {
+  background-color: blue;
+  display: flex;
+  align-items: flex-start;
+  margin: 1.5vw;
+  border-radius: 0.25vw;
+  font-size: 1.2vw;
+  padding: 1vw;
+}
+
+.delete-button {
+  background-color: #48adc1;
+  margin-left: auto;
+  font-size: 1.5vw;
+  font-family: "Serif";
+  border-radius: 0.5vw;
+  border: 0vw;
+}
+
+.finished-button {
+  background-color: #48adc1;
+  margin-left: auto;
+  font-size: 1.5vw;
+  font-family: "Serif";
+  border-radius: 0.5vw;
+  border: 0vw;
+}
+
+.task-input-text {
+  font-size: 1.5vw;
+  color: rgb(18, 31, 31);
+  background-color: rgb(54, 187, 236);
+  border: 0vw;
+  border-radius: 1vw;
+  width: 90vw;
+  text-align: center;
+}
+
+.task-input-text-corssed {
+  text-decoration: line-through;
+}
