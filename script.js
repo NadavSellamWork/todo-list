@@ -1,66 +1,74 @@
+import { htmlTask } from './task/htmlTask.js';
+
+const CURRENT_STATE_SOTRAGE_KEY = "current-state";
+let tasks = [];
 let content;
-window.onload = () => { content = document.getElementById("content"); }
-const DONE_TASK_TEXT_CLASS = "task-input-text-corssed";
 
-function addEmptyTask() {
-    let task = createEmptyTask();
-    content.appendChild(task);
+window.onload = () => {
+    content = document.getElementById("content");
+    loadFromLocalStorage();
 }
 
-function createRawTask() {
-    // this function creates just the task object with the relevent event handlers, without inner elements
-    let newTask = document.createElement("div");
-    newTask.classList.add("task")
-    return newTask;
+function createTask(text = "", done = false) {
+    return new htmlTask(text, done, saveLocalStorage, removeTask, moveToBotton, moveToTop);
 }
 
-function addTaskInputBar(task) {
-    // this function will add to the task the input bar section, and will return the input bar object.
-    let taskInput = document.createElement("input");
-    taskInput.classList.add("task-input-text");
-    taskInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            taskInput.blur();
-        }
-    })
-    task.appendChild(taskInput);
-    return taskInput;
+window.addEmptyTask = () => {
+    let task = createTask();
+    tasks.push(task);
+    content.insertBefore(task.div, content.firstChild);
+    saveLocalStorage();
 }
 
-function addTaskDeleteButton(task) {
-    let deleteButton = document.createElement("button");
-    deleteButton.textContent = "X";
-    deleteButton.classList.add("delete-button");
-    deleteButton.onclick = () => { deleteTask(task) };
-    task.appendChild(deleteButton);
+window.removeAllDoneTasks = () => {
+    tasks = tasks.filter(task => !task.done);
+    renderHTML();
 }
 
-function addTaskFinishedButton(task, taskInput) {
-    let finishedButton = document.createElement("button");
-    finishedButton.textContent = '\u{02713}';
-    finishedButton.classList.add("finished-button");
-    finishedButton.onclick = () => { chageTaskDoneMark(taskInput) };
-    task.appendChild(finishedButton);
+window.removeAllTasks = () => {
+    tasks = [];
+    renderHTML();
 }
 
-function createEmptyTask() {
-    let newTask = createRawTask();
-    taskInput = addTaskInputBar(newTask)
-    addTaskDeleteButton(newTask)
-    addTaskFinishedButton(newTask, taskInput)
-    return newTask;
+function loadFromLocalStorage() {
+    let states = JSON.parse(localStorage.getItem(CURRENT_STATE_SOTRAGE_KEY));
+    states.forEach(state => {
+        let task = createTask(state.text, state.done);;
+        tasks.push(task);
+    });
+    renderHTML();
 }
 
-function deleteTask(task) {
-    content.removeChild(task);
-    task.remove();
+export function saveLocalStorage() {
+    let states = tasks.map((task) => task.getState());
+    localStorage.setItem(CURRENT_STATE_SOTRAGE_KEY, JSON.stringify(states));
 }
 
-function chageTaskDoneMark(taskInput) {
-    if (taskInput.classList.contains(DONE_TASK_TEXT_CLASS)) {
-        taskInput.classList.remove(DONE_TASK_TEXT_CLASS);
-    } else {
-        taskInput.classList.add(DONE_TASK_TEXT_CLASS);
-    }
+function renderHTML() {
+    let childrenClone = [...content.children]
+    childrenClone.forEach(item => { item.remove() });
+    tasks.forEach(task => {
+        content.appendChild(task.div);
+    });
+    saveLocalStorage();
+};
+
+function removeTask(task) {
+    let index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+    renderHTML();
 }
 
+function moveToBotton(task) {
+    let index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+    tasks.push(task);
+    renderHTML();
+}
+
+function moveToTop(task) {
+    let index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+    tasks.splice(0, 0, task);
+    renderHTML();
+}
