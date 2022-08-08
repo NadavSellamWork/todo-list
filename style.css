@@ -77,6 +77,14 @@ body {
   text-align: center;
 }
 
+.task-input-text:hover {
+  background-color: rgb(149, 210, 233);
+}
+
+.task-input-text:focus-visible {
+  background-color: rgb(149, 210, 233);
+}
+
 .task-input-text-corssed {
   text-decoration: line-through;
 }
