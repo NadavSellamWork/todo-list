@@ -4,18 +4,18 @@ const DONE_TASK_BUTTON_TEXT = '\u{02713}';
 const DELETE_TASK_BUTTON_TEXT = "X";
 
 export class htmlTask extends Task {
-    constructor(text = "", done = false, eventHandlers) {
+    constructor(text = "", done = false, {onUpdate, onDelete, onDone, onUnDone,onDragStart,onDrop}) {
         let taskEventHandlers = {
-            "onUpdate": eventHandlers.onUpdate,
-            "onDelete": eventHandlers.onDelete,
-            "onDone": eventHandlers.onDone,
-            "onUnDone": eventHandlers.onUnDone,
+            onUpdate,
+            onDelete,
+            onDone,
+            onUnDone,
         };
         super(text, done, taskEventHandlers);
 
         let eventHandlersToAssign = {
-            "onDragStart": eventHandlers.onDragStart,
-            "onDrop": eventHandlers.onDrop,
+            onDragStart,
+            onDrop,
         };
         Object.assign(this, eventHandlersToAssign);
 
