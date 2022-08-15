@@ -1,6 +1,7 @@
 import { htmlTask } from './task/htmlTask.js';
 
 const CURRENT_STATE_SOTRAGE_KEY = "current-state";
+const CURRENT_DRAGGABLE_TASK_DATA_KEY = "current-dragged-task-index";
 let tasks = [];
 let content;
 
@@ -9,8 +10,34 @@ window.onload = () => {
     loadFromLocalStorage();
 }
 
+function drop(event) {
+    // this function is the function that will be called from the event "drop" of the object htmlTask.
+
+    let currentDraggedTaskIndex = event.dataTransfer.getData(CURRENT_DRAGGABLE_TASK_DATA_KEY);
+    let currentDraggedTask = tasks[currentDraggedTaskIndex];
+    let indexOfDroppenUponTask = tasks.indexOf(this.task);
+    tasks.splice(currentDraggedTaskIndex, 1);
+    tasks.splice(indexOfDroppenUponTask, 0, currentDraggedTask);
+    renderHTML();
+}
+
+function dragStartHandler(event) {
+    // this function will be called from task, to "this" is the current dragged task div.
+    let indexOfDraggedTask = tasks.indexOf(this.task);
+    event.dataTransfer.setData(CURRENT_DRAGGABLE_TASK_DATA_KEY, indexOfDraggedTask)
+}
+
 function createTask(text = "", done = false) {
-    return new htmlTask(text, done, saveLocalStorage, removeTask, moveToBotton, moveToTop);
+    let eventHandlers = {
+        "onUpdate": saveLocalStorage,
+        "onDelete": removeTask,
+        "onDone": moveToBotton,
+        "onUnDone": moveToTop,
+        "onDragStart": dragStartHandler,
+        "onDrop": drop,
+    };
+    let newTask = new htmlTask(text, done, eventHandlers);
+    return newTask;
 }
 
 window.addEmptyTask = () => {

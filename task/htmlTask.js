@@ -4,8 +4,20 @@ const DONE_TASK_BUTTON_TEXT = '\u{02713}';
 const DELETE_TASK_BUTTON_TEXT = "X";
 
 export class htmlTask extends Task {
-    constructor(text = "", done = false, onUpdate, onDelete, onDone, onUnDone) {
-        super(text, done, onUpdate, onDelete, onDone, onUnDone);
+    constructor(text = "", done = false, {onUpdate, onDelete, onDone, onUnDone,onDragStart,onDrop}) {
+        let taskEventHandlers = {
+            onUpdate,
+            onDelete,
+            onDone,
+            onUnDone,
+        };
+        super(text, done, taskEventHandlers);
+
+        let eventHandlersToAssign = {
+            onDragStart,
+            onDrop,
+        };
+        Object.assign(this, eventHandlersToAssign);
 
         this.initilizeDiv();
 
@@ -16,11 +28,16 @@ export class htmlTask extends Task {
         this.initilizeDoneButton();
     }
 
-    initilizeDiv(){
+    initilizeDiv() {
         this.div = document.createElement('div');
         this.div.classList.add("task");
         this.div.draggable = true;
         this.div.task = this;
+
+        this.div.addEventListener("dragenter", (event) => { event.preventDefault(); });
+        this.div.addEventListener("dragover", (event) => { event.preventDefault(); });
+        this.div.addEventListener("dragstart", this.onDragStart);
+        this.div.addEventListener("drop", this.onDrop);
     }
 
     initializeInputBar = () => {

@@ -1,9 +1,15 @@
 export class Task {
-    constructor(text = "", done = false, onUpdate, onDelete, onDone, onUnDone) {
+    constructor(text = "", done = false, { onUpdate, onDelete, onDone, onUnDone }) {
+        let eventHandlersToAssign = {
+            onUpdate,
+            onDelete,
+            onDone,
+            onUnDone,
+        };
+        Object.assign(this, eventHandlersToAssign);
         this.done = done;
         this.text = text;
 
-        this.onUpdate = onUpdate;
         this.onDelete = () => { onDelete.bind(this, this) };
         this.onDone = () => { onDone(this) };
         this.onUnDone = () => { onUnDone(this) };
